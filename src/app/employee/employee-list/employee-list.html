@@ -1,0 +1,92 @@
+<ngb-alert *ngIf="alertMesage.showAlert" [type]="alertMesage.type" (closed)="closeAlert()">{{alertMesage.msg}}</ngb-alert>
+<button mat-raised-button color="primary" class="btn btn-warning" (click)="open(content,null)">Crear</button>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col" sortable="name">cedula</th>
+            <th scope="col" sortable="area">foto</th>
+            <th scope="col" sortable="population">Nombre</th>
+            <th scope="col" sortable="population">Fecha de Ingreso</th>
+            <th scope="col" sortable="population">Cargo</th>
+            <th scope="col" sortable="population">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let employee of employess;">
+            <th scope="row">{{employee.id}}</th>
+            <th scope="row">{{employee.nit}}</th>
+            <th scope="row"><img [src]="urlImage+employee.photo" width="50" height="50"/></th>
+            <th scope="row">{{employee.name}}</th>
+            <th scope="row">{{employee.dateEntry}}</th>
+            <th scope="row">{{employee.position.name}}</th>
+            <td>
+                <button type="button" class="btn btn-warning btn-sm" (click)="open(content,employee)"><i class="fas fa-pencil-alt"></i> </button>
+                <button type="button" class="btn btn-danger btn-sm"  (click)="selectDeleteEmployee(employee.id)" style="margin-left: 3%;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="mb-3">
+                <label for="dateOfBirth">Cedula</label>
+                <div class="input-group">
+                    <input id="cedula"  class="form-control" name="cedula"  [(ngModel)]="data.nit"  [ngModelOptions]="{standalone: true}"/>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="dateOfBirth">nombre</label>
+                <div class="input-group">
+                    <input id="name" class="form-control"  [(ngModel)]="data.name"  [ngModelOptions]="{standalone: true}" name="cedula" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="dateOfBirth">Foto</label>
+                <div class="input-group">
+                    <input type="file" class="form-control-file"  [(ngModel)]="data.photo" [ngModelOptions]="{standalone: true}" (change)="uploadFile($event)" accept="image/png, image/gif, image/jpeg" id="archivo">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="dateOfBirth">Fecha de ingreso</label>
+                <div class="input-group">
+                    <input ngbDatepicker class="form-control"  [(ngModel)]="data.dateEntry"  placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                        #d="ngbDatepicker" (click)="d.toggle()" />
+                    <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()"
+                        type="button"></button>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="dateOfBirth">cargo</label>
+                <div class="input-group">
+                    <select class="form-select" aria-label="Default select example" [(ngModel)]="data.position.id" [ngModelOptions]="{standalone: true}" (change)="onChange($event)">
+                        <option *ngFor="let position of positions;" value="{{position.id}}" >{{position.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" [disabled]="continued" (click)="close()" >Save</button>
+    </div>
+</ng-template>
+
+<ng-template #validDelete let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">¿Realmente desea eliminar este empleado?</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark"  (click)="modal.dismiss('Cross click')" >No</button>
+        <button type="button" class="btn btn-outline-dark"  (click)="deleteEmployee()" >Si</button>
+    </div>
+</ng-template>
